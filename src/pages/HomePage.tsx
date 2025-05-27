@@ -14,7 +14,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
-  const { urls, setUrls, loading: isFetchingUrls, fetchUrls } = useUrls(token);
+  const { urls, loading: isFetchingUrls, fetchUrls } = useUrls(token);
 
   useEffect(() => {
     if (auth.isAuthenticated && !auth.isLoading) {
