@@ -4,6 +4,7 @@ const cognitoAuthConfig = {
   redirect_uri: import.meta.env.VITE_COGNITO_REDIRECT_URI,
   response_type: "code",
   scope: "email openid",
+  loadUserInfo: true,
 };
 
 Object.entries(cognitoAuthConfig).forEach(([key, value]) => {

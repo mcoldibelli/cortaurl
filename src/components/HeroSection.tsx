@@ -35,7 +35,7 @@ export default function HeroSection({ onShorten, isLoading, shortened, copiedUrl
                             name="url"
                             className="input pr-[140px] h-14 rounded-full text-base sm:text-lg shadow-lg w-full border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
                             placeholder="Cole sua URL aqui para encurtar"
-                            type="url"
+                            type="text"
                             required
                             disabled={isLoading}
                         />
