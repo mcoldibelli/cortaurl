@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/:short_code",
+        "destination": "https://4gyk4062f1.execute-api.us-east-2.amazonaws.com/Prod/:short_code"
+      }
+    ]
+  }
+  
