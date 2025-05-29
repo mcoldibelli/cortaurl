@@ -20,12 +20,23 @@ export async function apiRequest<T>(
         return undefined as unknown as T;
     }
 
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+    let body: any = null;
+
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        body = await response.json();
+    } else {
+        body = await response.text();
     }
 
-    return response.json();
+    if (!response.ok) {
+        const errMsg = typeof body === 'string' && body.length
+            ? body
+            : (body?.error || 'Unknown error');
+        throw new Error(errMsg || `HTTP error! status: ${response.status}`);
+    }
+
+    return body;
 }
 
 export function createApiClient(getToken: () => Promise<string | null>) {
