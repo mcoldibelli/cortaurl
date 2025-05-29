@@ -2,10 +2,11 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export interface UrlList {
-  id: number;
   short_code: string;
   original_url: string;
   created_at: string;
+  expires_at?: string;
+  created_by?: string;
 }
 
 interface UrlItemProps {

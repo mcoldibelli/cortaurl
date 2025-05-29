@@ -31,7 +31,9 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      fetchUrls();
+      fetchUrls().then(() => {
+        console.log('urls fetched, ', urls);
+      });
     }
   }, [user, loading, fetchUrls]);
 
@@ -113,7 +115,7 @@ export default function HomePage() {
             ) : urls.length > 0 ? (
               <ul className="space-y-3 sm:space-y-4">
                 {urls.map((url) => (
-                  <UrlItem key={url.id} url={url} onCopy={copyToClipboard} copiedUrl={copiedUrl} />
+                  <UrlItem key={url.short_code} url={url} onCopy={copyToClipboard} copiedUrl={copiedUrl} />
                 ))}
               </ul>
             ) : (
