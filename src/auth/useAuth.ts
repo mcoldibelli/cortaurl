@@ -9,6 +9,7 @@ import {
     updateProfile
 } from 'firebase/auth';
 import { auth } from './firebase';
+import toast from 'react-hot-toast';
 
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
@@ -51,6 +52,7 @@ export function useAuth() {
         try {
             setError(null);
             await signOut(auth);
+            toast.dismiss();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to logout');
             throw err;
