@@ -1,4 +1,3 @@
-import { useAuth } from "react-oidc-context";
 import { useState, useEffect } from "react";
 import { urlApi, type ShortenUrlResponse } from "../api/urlApi";
 import HeroSection from "../components/HeroSection";
@@ -6,21 +5,35 @@ import UrlItem from "../components/UrlItem";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useUrls } from "../hooks/useUrls";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../auth/AuthContext";
 
 export default function HomePage() {
-  const auth = useAuth();
-  const token = auth.user?.access_token;
+  const { user, loading } = useAuthContext();
+  const [token, setToken] = useState<string>("");
   const [shortened, setShortened] = useState<ShortenUrlResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
+  // Fetch token when user changes
+  useEffect(() => {
+    const fetchToken = async () => {
+      if (user) {
+        const t = await user.getIdToken();
+        setToken(t);
+      } else {
+        setToken("");
+      }
+    };
+    fetchToken();
+  }, [user]);
+
   const { urls, loading: isFetchingUrls, fetchUrls } = useUrls(token);
 
   useEffect(() => {
-    if (auth.isAuthenticated && !auth.isLoading) {
+    if (user && !loading) {
       fetchUrls();
     }
-  }, [auth.isAuthenticated, auth.isLoading, fetchUrls]);
+  }, [user, loading, fetchUrls]);
 
   const handleShorten = async (urlToShorten: string) => {
     setShortened(null);
@@ -30,9 +43,9 @@ export default function HomePage() {
     }
     try {
       setIsLoading(true);
-      const result = await urlApi.shortenUrl(token || "", urlToShorten);
+      const result = await urlApi.shortenUrl(token, urlToShorten);
       setShortened(result);
-      if (auth.isAuthenticated) {
+      if (user) {
         await fetchUrls();
       }
       toast.success("URL encurtada com sucesso!");
@@ -70,7 +83,7 @@ export default function HomePage() {
     }
   };
 
-  if (auth.isLoading) return null;
+  if (loading) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -80,10 +93,10 @@ export default function HomePage() {
         shortened={shortened}
         copiedUrl={copiedUrl}
         onCopy={copyToClipboard}
-        isAuthenticated={auth.isAuthenticated}
+        isAuthenticated={!!user}
       />
 
-      {auth.isAuthenticated && (
+      {user && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <div className="card">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-6">

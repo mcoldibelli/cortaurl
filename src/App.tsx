@@ -1,32 +1,21 @@
-import { useAuth } from "react-oidc-context";
+import { useState } from 'react';
 import { BrowserRouter, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CustomToast from "./components/CustomToast";
 import AppRoutes from "./routes/AppRoutes";
+import { useAuthContext } from "./auth/AuthContext";
+import LoginModal from './components/LoginModal';
+import SignupModal from './components/SignupModal';
 
 export default function App() {
-  const auth = useAuth();
+  const { user, loading, logout } = useAuthContext();
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
 
   // Loading state
-  if (auth.isLoading) {
+  if (loading) {
     return <LoadingSpinner text="Carregando aplicação..." />;
-  }
-
-  // Auth error state
-  if (auth.error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md w-full text-center">
-          <div className="text-4xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Erro de Autenticação</h1>
-          <p className="text-gray-600 mb-6">{auth.error.message}</p>
-          <button onClick={() => auth.signinRedirect()} className="btn-primary">
-            Tentar Novamente
-          </button>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -88,16 +77,16 @@ export default function App() {
                 Encurtador de URL
               </Link>
               <div className="flex items-center gap-4">
-                {auth.isAuthenticated ? (
+                {user ? (
                   <button
-                    onClick={() => auth.removeUser()}
+                    onClick={() => logout()}
                     className="btn-secondary"
                   >
                     Sair
                   </button>
                 ) : (
                   <button
-                    onClick={() => auth.signinRedirect()}
+                    onClick={() => setLoginOpen(true)}
                     className="btn-primary"
                   >
                     Entrar
@@ -110,6 +99,16 @@ export default function App() {
         <main className="py-8">
           <AppRoutes />
         </main>
+        <LoginModal
+          open={loginOpen}
+          onClose={() => setLoginOpen(false)}
+          onOpenSignup={() => { setLoginOpen(false); setSignupOpen(true); }}
+        />
+        <SignupModal
+          open={signupOpen}
+          onClose={() => setSignupOpen(false)}
+          onOpenLogin={() => { setSignupOpen(false); setLoginOpen(true); }}
+        />
       </div>
     </BrowserRouter>
   );
