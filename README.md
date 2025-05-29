@@ -1,54 +1,48 @@
-# React + TypeScript + Vite
+# Encurtador de URL — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React do projeto de encurtamento de URLs, permitindo criar, visualizar e gerenciar URLs curtas. Integração total com backend serverless (AWS Lambda, DynamoDB e autenticação Firebase).
 
-Currently, two official plugins are available:
+## ✨ Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Encurtar qualquer URL (sem autenticação)
+- Login (Firebase Auth)
+- Listar URLs criadas pelo usuário logado
+- Copiar URLs encurtadas com 1 clique
+- Deletar URLs criadas
+- Visualizar estatísticas das URLs (em desenvolvimento)
+- Interface responsiva e moderna (React + Vite + Tailwind)
 
-## Expanding the ESLint configuration
+## 🚀 Como rodar o projeto localmente
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Clone o repositório:**
+   ```sh
+   git clone https://github.com/mcoldibelli/cortaurl.git
+   cd cortaurl
+2. **Instale as dependências**
+   ``` 
+    npm install
+3. **Configure as variáveis de ambiente:**
+   ```
+   cp .env.example .env
+  Edite o arquivo ``.env`` com os dados do seu backend e Firebase
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+4. Rode o servidor de desenvolvimento:
+   ```
+    npm run dev
+5. Acesse:
+    ```
+    http://localhost:5173
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Stack tecnológica:
+- React
+- Vite
+- Tailwind CSS
+- Firebase Auth
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🔗 Integração com o Backend
+O backend (API REST) está documentado e disponível no repositório [cortaurl-backend]("https://github.com/mcoldibelli/cortaurl-backend").
+
+É necessário configurar o endpoint correto na variável VITE_API_BASE do .env.
+
+O login/autenticação utiliza Firebase. Crie um projeto no Firebase Console e configure o Google Auth.
