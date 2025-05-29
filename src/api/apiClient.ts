@@ -16,6 +16,10 @@ export async function apiRequest<T>(
         headers,
     });
 
+    if (response.status === 204) {
+        return undefined as unknown as T;
+    }
+
     if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Unknown error' }));
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
