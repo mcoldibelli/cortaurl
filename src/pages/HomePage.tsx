@@ -28,7 +28,7 @@ export default function HomePage() {
     fetchToken();
   }, [user]);
 
-  const { urls, loading: isFetchingUrls, fetchUrls } = useUrls(token);
+  const { urls, loading: isFetchingUrls, fetchUrls, setUrls } = useUrls(token);
 
   useEffect(() => {
     if (user && !loading) {
@@ -89,11 +89,15 @@ export default function HomePage() {
   const handleDelete = async (short_code: string) => {
     if (!user) return;
     setDeleting(short_code);
+    // Optimistically remove the URL from the list
+    const prevUrls = [...urls];
+    setUrls(urls.filter((u) => u.short_code !== short_code));
     try {
       await urlApi.deleteUrl(token, short_code);
-      await fetchUrls();
       toast.success("URL excluída com sucesso!");
     } catch (e: any) {
+      // Restore previous list if error
+      setUrls(prevUrls);
       toast.error(e.message || "Falha ao excluir URL");
     } finally {
       setDeleting(null);
