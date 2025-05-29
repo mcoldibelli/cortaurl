@@ -12,7 +12,7 @@ export function useUrls(token?: string) {
     try {
       setLoading(true);
       const data = await urlApi.getUrls(token);
-      setUrls(data);
+      setUrls(data.items || []);
     } catch (e: any) {
       toast.error(e.message || "Falha ao buscar URLs");
     } finally {
