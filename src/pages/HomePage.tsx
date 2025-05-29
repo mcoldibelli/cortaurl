@@ -13,6 +13,7 @@ export default function HomePage() {
   const [shortened, setShortened] = useState<ShortenUrlResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   // Fetch token when user changes
   useEffect(() => {
@@ -85,6 +86,20 @@ export default function HomePage() {
     }
   };
 
+  const handleDelete = async (short_code: string) => {
+    if (!user) return;
+    setDeleting(short_code);
+    try {
+      await urlApi.deleteUrl(token, short_code);
+      await fetchUrls();
+      toast.success("URL excluída com sucesso!");
+    } catch (e: any) {
+      toast.error(e.message || "Falha ao excluir URL");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   if (loading) return null;
 
   return (
@@ -115,7 +130,13 @@ export default function HomePage() {
             ) : urls.length > 0 ? (
               <ul className="space-y-3 sm:space-y-4">
                 {urls.map((url) => (
-                  <UrlItem key={url.short_code} url={url} onCopy={copyToClipboard} copiedUrl={copiedUrl} />
+                  <UrlItem
+                    key={url.short_code}
+                    url={url}
+                    onCopy={copyToClipboard}
+                    copiedUrl={copiedUrl}
+                    onDelete={deleting === url.short_code ? undefined : handleDelete}
+                  />
                 ))}
               </ul>
             ) : (

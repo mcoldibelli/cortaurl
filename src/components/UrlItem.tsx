@@ -13,9 +13,10 @@ interface UrlItemProps {
   url: UrlList;
   onCopy: (url: string) => void;
   copiedUrl: string | null;
+  onDelete?: (short_code: string) => void;
 }
 
-const UrlItem = ({ url, onCopy, copiedUrl }: UrlItemProps) => {
+const UrlItem = ({ url, onCopy, copiedUrl, onDelete }: UrlItemProps) => {
   const fullShortUrl = `${window.location.origin}/${url.short_code}`;
   const isCopied = copiedUrl === fullShortUrl;
 
@@ -31,13 +32,25 @@ const UrlItem = ({ url, onCopy, copiedUrl }: UrlItemProps) => {
           >
             {fullShortUrl}
           </a>
-          <button
-            onClick={() => onCopy(fullShortUrl)}
-            className="p-1.5 sm:p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex-shrink-0"
-            title={isCopied ? "Copiado!" : "Copiar URL"}
-          >
-            {isCopied ? "✓" : "📋"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onCopy(fullShortUrl)}
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex-shrink-0"
+              title={isCopied ? "Copiado!" : "Copiar URL"}
+            >
+              {isCopied ? "✓" : "📋"}
+            </button>
+            {onDelete && (
+              <button
+                onClick={() => onDelete(url.short_code)}
+                className="p-1.5 sm:p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                title="Excluir URL"
+                aria-label="Excluir URL"
+              >
+                <span role="img" aria-label="Excluir">🗑️</span>
+              </button>
+            )}
+          </div>
         </div>
         <div className="space-y-1">
           <p className="text-xs sm:text-sm text-gray-600 truncate" title={url.original_url}>
