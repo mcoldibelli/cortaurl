@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const { login, error } = useAuthContext();
+    const { login } = useAuthContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
